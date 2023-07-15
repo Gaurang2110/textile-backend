@@ -1,0 +1,29 @@
+service: textile-server-lambda
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ap-south-1
+  profile: default
+  stage: dev
+  timeout: 900
+
+functions:
+  main:
+    handler: dist/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: "{proxy+}"
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+
+    
