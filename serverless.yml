@@ -7,7 +7,8 @@ provider:
   name: aws
   runtime: nodejs14.x
   region: ap-south-1
-  profile: default
+  profile: textile-backend
+  memorySize: 512
   stage: dev
   timeout: 900
 
@@ -20,10 +21,8 @@ functions:
           path: /
       - http:
           method: ANY
-          path: "{proxy+}"
+          path: '{proxy+}'
 
 custom:
   serverless-offline:
     noPrependStageInUrl: true
-
-    

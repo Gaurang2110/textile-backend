@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -18,8 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "deploy:local": "yarn build && node ./node_modules/serverless/bin/serverless.js offline",
-    "deploy:prod": "yarn build && node ./node_modules/serverless/bin/serverless.js deploy"
+    "deploy:local": "npm run build && node ./node_modules/serverless/bin/serverless.js offline",
+    "deploy:prod": "npm run build && node ./node_modules/serverless/bin/serverless.js deploy"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

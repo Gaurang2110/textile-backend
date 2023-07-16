@@ -35,3 +35,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 *.env
+
+.serverless
+package-lock.json
+yarn.lock
