@@ -4,6 +4,10 @@ import { WorkerSchema } from './schema/worker.schema';
 import { WorkerController } from './worker.controller';
 import { WorkerService } from './worker.service';
 import { UtilityFunctions } from 'src/utils/functions';
+import { RoleSchema } from 'src/role/schema/role.schema';
+import { PostSchema } from 'src/post/schema/post.schema';
+import { S3Service } from 'src/aws/s3/s3.service';
+import { OrganizationSchema } from 'src/organization/schema/organization.schema';
 
 @Module({
   imports: [
@@ -12,9 +16,21 @@ import { UtilityFunctions } from 'src/utils/functions';
         name: 'Worker',
         schema: WorkerSchema,
       },
+      {
+        name: 'Role',
+        schema: RoleSchema,
+      },
+      {
+        name: 'Post',
+        schema: PostSchema,
+      },
+      {
+        name: 'Organization',
+        schema: OrganizationSchema,
+      },
     ]),
   ],
-  providers: [WorkerService, UtilityFunctions],
+  providers: [WorkerService, UtilityFunctions, S3Service],
   controllers: [WorkerController],
 })
 export class WorkerModule {}

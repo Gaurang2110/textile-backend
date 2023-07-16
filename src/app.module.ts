@@ -6,6 +6,8 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
 import { OrganizationModule } from './organization/organization.module';
 import { PostModule } from './post/post.module';
 import { WorkerModule } from './worker/worker.module';
+import { AwsModule } from './aws/aws.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { WorkerModule } from './worker/worker.module';
     OrganizationModule,
     PostModule,
     WorkerModule,
+    AwsModule,
+    RoleModule
   ],
   controllers: [AppController],
   providers: [AppService],

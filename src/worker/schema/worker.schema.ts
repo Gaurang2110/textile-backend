@@ -1,14 +1,16 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
 import { SchemaTypes, Types } from 'mongoose';
+import { Organization } from 'src/organization/schema/organization.schema';
 import { Post } from 'src/post/schema/post.schema';
+import { Role } from 'src/role/schema/role.schema';
 
 @Schema({
   timestamps: true,
 })
 export class Worker {
   @Prop({
-    unique: true
+    unique: true,
   })
   alterNo: string;
 
@@ -28,7 +30,7 @@ export class Worker {
   mobileNo: string;
 
   @Prop({
-    unique: true
+    unique: true,
   })
   emailAddress: string;
 
@@ -56,9 +58,35 @@ export class Worker {
   @Prop({
     type: SchemaTypes.ObjectId,
     ref: Post.name,
+    required: true,
   })
-  @Transform(({ value }) => new Types.ObjectId(value))  
+  @Transform(({ value }) => new Types.ObjectId(value))
   post: Types.ObjectId;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: Role.name,
+    required: true,
+  })
+  @Transform(({ value }) => new Types.ObjectId(value))
+  role: Types.ObjectId;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: Organization.name,
+    required: true,
+  })
+  @Transform(({ value }) => new Types.ObjectId(value))
+  company: Types.ObjectId;
+
+  @Prop()
+  aadharCard: string;
+
+  @Prop()
+  profile: string;
+
+  @Prop()
+  bankPassbook: string;
 }
 
 export type WorkerDocument = Worker & Document;

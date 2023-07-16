@@ -69,4 +69,24 @@ export class CreateWorkerDto {
   @IsString()
   @IsNotEmpty()
   post: string;
+
+  @IsString()
+  @IsNotEmpty()
+  role: string;
+
+  @IsString()
+  @IsNotEmpty()
+  company: string;
+
+  @IsString()
+  @IsNotEmpty()
+  aadharCard: string;
+
+  @IsString()
+  @IsNotEmpty()
+  profile: string;
+
+  @IsString()
+  @IsNotEmpty()
+  bankPassbook: string;
 }
