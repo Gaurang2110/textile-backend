@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
 
 @Injectable()
 export class S3Service {
+  private readonly logger = new Logger(S3Service.name);
   client = null;
   modelBucket = this.configService.get('AWS_S3_MODEL_BUCKET', '');
   defaultExpire = this.configService.get('AWS_S3_DEFAULT_EXPIRE', 3600);
@@ -11,6 +12,45 @@ export class S3Service {
   accessKeyId = this.configService.get('TEXTILE_AWS_ACCESS_KEY_ID', '');
   secretAccessKey = this.configService.get('TEXTILE_AWS_SECRET_ACCESS_KEY', '');
   constructor(private readonly configService: ConfigService) {}
+
+  getS3() {
+    return new S3({
+      credentials: {
+        accessKeyId: this.accessKeyId,
+        secretAccessKey: this.secretAccessKey,
+      },
+      endpoint: `s3-${this.defaultRegion}.amazonaws.com`,
+      signatureVersion: 'v4',
+      region: this.defaultRegion,
+    });
+  }
+
+  async upload(file, bucket, key, acl) {
+    const bucketS3 = bucket || this.modelBucket;
+    const resp = await this.uploadS3(file.buffer, bucketS3, key, acl);
+    console.log('resp', resp);
+    return resp;
+  }
+
+  async uploadS3(file, bucket, key, acl) {
+    const s3 = this.getS3();
+    const params = {
+      Bucket: bucket,
+      Key: key,
+      Body: file,
+      ACL: acl,
+    };
+    console.log('buffer', params);
+    return new Promise((resolve, reject) => {
+      s3.upload(params, (err, data) => {
+        if (err) {
+          this.logger.error(err);
+          reject(err.message);
+        }
+        resolve(data);
+      });
+    });
+  }
 
   async GetUploadURL(key: string, bucket: string, acl = 'private') {
     this.client = new S3({

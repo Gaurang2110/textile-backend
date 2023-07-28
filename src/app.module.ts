@@ -16,6 +16,7 @@ import { RoleModule } from './role/role.module';
     }),
     MongooseModule.forRootAsync({
       useFactory: (configService: ConfigService) => {
+        console.log('url', configService.get('MONGO_URI', ''));
         return {
           connectionFactory: (connection) => {
             if (connection.readyState === 1) {
@@ -39,7 +40,7 @@ import { RoleModule } from './role/role.module';
     PostModule,
     WorkerModule,
     AwsModule,
-    RoleModule
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

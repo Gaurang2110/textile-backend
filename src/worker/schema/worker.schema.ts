@@ -87,6 +87,9 @@ export class Worker {
 
   @Prop()
   bankPassbook: string;
+
+  @Prop()
+  signature: string;
 }
 
 export type WorkerDocument = Worker & Document;

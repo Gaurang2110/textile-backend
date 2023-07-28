@@ -1,7 +1,15 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { WorkerService } from './worker.service';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { WorkerImageDTO } from './dto/worker-image.dto';
+import { WorkerService } from './worker.service';
 
 @Controller({
   path: 'worker',
@@ -23,8 +31,9 @@ export class WorkerController {
   }
 
   @Post('upload')
-  async uploadWorkerImages(@Body() imageDto: WorkerImageDTO) {
-    const resp = await this.workerService.uploadImages(imageDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async upload(@UploadedFile() file, @Body() imageDto: WorkerImageDTO) {
+    const resp = await this.workerService.uploadWorkerImage(file, imageDto);
     return { message: 'Action completed Successfully.', data: resp };
   }
 }

@@ -4,6 +4,7 @@ export enum WorkerImageType {
   PROFILE = 'profile',
   BANK_PASSBOOK = 'bank-passbook',
   AADHAR_CARD = 'aadhar-card',
+  SIGNATURE = 'signature',
 }
 
 export enum MediaAction {
@@ -30,8 +31,4 @@ export class WorkerImageDTO {
   @IsDefined()
   @IsNotEmpty()
   company: string;
-
-  @IsEnum(MediaAction)
-  @IsDefined()
-  action: MediaAction;
 }

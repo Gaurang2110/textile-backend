@@ -13,32 +13,36 @@ import {
 export class BankDetailDTO {
   @IsString()
   @IsNotEmpty()
-  bankAccountName: String;
+  bankAccountName: string;
 
   @IsString()
   @IsNotEmpty()
-  ifscCode: String;
+  ifscCode: string;
 
   @IsString()
   @IsNotEmpty()
-  bankAccountNumber: String;
+  bankAccountNumber: string;
 }
 
 export class CreateWorkerDto {
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   alterNo: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   machineNo: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   name: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   reference: string;
 
   @IsString()
@@ -48,6 +52,7 @@ export class CreateWorkerDto {
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   mobileNo: string;
 
   @IsString()
@@ -64,29 +69,41 @@ export class CreateWorkerDto {
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   status: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   post: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   role: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   company: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   aadharCard: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   profile: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   bankPassbook: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsDefined()
+  signature: string;
 }
