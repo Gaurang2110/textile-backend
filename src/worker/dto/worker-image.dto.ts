@@ -31,4 +31,8 @@ export class WorkerImageDTO {
   @IsDefined()
   @IsNotEmpty()
   company: string;
+
+  @IsEnum(MediaAction)
+  @IsDefined()
+  action: MediaAction;
 }

@@ -92,20 +92,28 @@ export class WorkerService {
     }
   }
 
-  async uploadWorkerImage(file, dto: WorkerImageDTO) {
-    console.log('WorkerImageDTO', dto);
+  async uploadImages(dto: WorkerImageDTO) {
     try {
       const extension = extname(dto.fileName).toLowerCase() || '.png';
       const key = `org/${dto.company}/${dto.alterNo}/${dto.type}${extension}`;
       const acl = 'public-read';
       const bucket = 'textile-user-images';
-      const { Location }: Record<string, any> = await this.s3Service.upload(
-        file,
-        bucket,
-        key,
-        acl,
-      );
-      return { url: Location };
+
+      if (dto.action === MediaAction.SIGNED_URL) {
+        const url = await this.s3Service.GetUploadURL(key, bucket, acl);
+        return { url };
+      } else if (dto.action === MediaAction.GET_LINK) {
+        const isExists = await this.s3Service.CheckIfExists(key, bucket);
+        if (!isExists) {
+          throw new HttpException(
+            'Image not Exist, Please upload first.',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+        const url = await this.s3Service.GetPublicUrl(key, bucket);
+        return { url };
+      }
+      return { url: '' };
     } catch (err) {
       throw new HttpException(
         err?.message || 'Something went wrong.',
