@@ -49,8 +49,6 @@ export class AuthService {
         throw new BadRequestException('Email address not registered');
       }
 
-      console.log(worker);
-
       const compare = await this.utilityFunctions.comparePassword(
         dto.password,
         worker.password,
