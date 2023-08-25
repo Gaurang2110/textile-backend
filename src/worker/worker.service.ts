@@ -150,30 +150,30 @@ export class WorkerService {
     }
   }
 
-  async uploadWorkerImage(
-    file: Express.Multer.File,
-    dto: WorkerDierctImageDTO,
-  ) {
-    try {
-      const extension = extname(dto.fileName).toLowerCase() || '.png';
-      const key = `org/${dto.company}/${dto.alterNo}/${dto.type}${extension}`;
-      const acl = 'public-read';
-      const bucket = 'textile-user-images';
+  // async uploadWorkerImage(
+  //   file: Express.Multer.File,
+  //   dto: WorkerDierctImageDTO,
+  // ) {
+  //   try {
+  //     const extension = extname(dto.fileName).toLowerCase() || '.png';
+  //     const key = `org/${dto.company}/${dto.alterNo}/${dto.type}${extension}`;
+  //     const acl = 'public-read';
+  //     const bucket = 'textile-user-images';
 
-      const { Location }: Record<string, any> = await this.s3Service.upload(
-        file,
-        bucket,
-        key,
-        acl,
-      );
-      return { url: Location };
-    } catch (err) {
-      console.log(err);
-      console.log(err.stack);
-      throw new HttpException(
-        err?.message || 'Something went wrong.',
-        err?.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
+  //     const { Location }: Record<string, any> = await this.s3Service.upload(
+  //       file,
+  //       bucket,
+  //       key,
+  //       acl,
+  //     );
+  //     return { url: Location };
+  //   } catch (err) {
+  //     console.log(err);
+  //     console.log(err.stack);
+  //     throw new HttpException(
+  //       err?.message || 'Something went wrong.',
+  //       err?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+  // }
 }

@@ -32,9 +32,6 @@ import { MulterModule } from '@nestjs/platform-express';
         schema: OrganizationSchema,
       },
     ]),
-    MulterModule.register({
-      dest: 'tmp',
-    }),
   ],
   providers: [WorkerService, UtilityFunctions, S3Service],
   controllers: [WorkerController],

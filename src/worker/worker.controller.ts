@@ -42,12 +42,4 @@ export class WorkerController {
     const resp = await this.workerService.uploadImages(imageDto);
     return { message: 'Action completed Successfully.', data: resp };
   }
-
-  @Post('upload/image')
-  @UseInterceptors(FileInterceptor('file'))
-  async upload(@UploadedFile() file, @Body() imageDto: WorkerDierctImageDTO) {
-    console.log('File', file);
-    const resp = await this.workerService.uploadWorkerImage(file, imageDto);
-    return { message: 'Action completed Successfully.', data: resp };
-  }
 }
