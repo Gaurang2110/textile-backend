@@ -1,7 +1,9 @@
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsDefined,
   IsEmail,
+  IsMongoId,
   IsNotEmpty,
   IsNotEmptyObject,
   IsObject,
@@ -9,6 +11,7 @@ import {
   Length,
   ValidateNested,
 } from 'class-validator';
+import { ObjectId } from 'mongoose';
 
 export class BankDetailDTO {
   @IsString()
@@ -25,6 +28,11 @@ export class BankDetailDTO {
 }
 
 export class CreateWorkerDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsDefined()
+  workerNo: string;
+
   @IsString()
   @IsNotEmpty()
   @IsDefined()
@@ -106,4 +114,8 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   @IsDefined()
   signature: string;
+
+  @IsArray()
+  @IsMongoId({ each: true })
+  workers: ObjectId[];
 }

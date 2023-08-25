@@ -1,6 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
+import * as fs from 'fs/promises';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
 @Injectable()
 export class S3Service {
@@ -27,29 +30,41 @@ export class S3Service {
 
   async upload(file, bucket, key, acl) {
     const bucketS3 = bucket || this.modelBucket;
-    const resp = await this.uploadS3(file.buffer, bucketS3, key, acl);
+    const resp = await this.uploadS3(file, bucketS3, key, acl);
     console.log('resp', resp);
     return resp;
   }
 
-  async uploadS3(file, bucket, key, acl) {
+  public async uploadS3(
+    file: Express.Multer.File,
+    bucket: string,
+    key: string,
+    acl: string,
+  ) {
     const s3 = this.getS3();
-    const params = {
-      Bucket: bucket,
-      Key: key,
-      Body: file,
-      ACL: acl,
-    };
-    console.log('buffer', params);
-    return new Promise((resolve, reject) => {
-      s3.upload(params, (err, data) => {
-        if (err) {
-          this.logger.error(err);
-          reject(err.message);
-        }
-        resolve(data);
-      });
-    });
+    console.log(__dirname, '..', '..', '..', file.destination, file.filename);
+    console.log(
+      join(__dirname, '..', '..', '..', file.destination, file.filename),
+    );
+    const buffer = await readFile(
+      join(__dirname, '..', '..', '..', file.destination, file.filename),
+    );
+    const res = await s3
+      .upload({
+        Bucket: bucket,
+        Key: key,
+        Body: buffer,
+        ACL: acl,
+      })
+      .promise();
+    // this.unlinkFile(file);
+    return res;
+  }
+
+  private async unlinkFile(file: Express.Multer.File) {
+    await fs.unlink(
+      join(__dirname, '..', '..', '..', file.destination, file.filename),
+    );
   }
 
   async GetUploadURL(key: string, bucket: string, acl = 'private') {

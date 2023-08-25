@@ -1,4 +1,4 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
 import { SchemaTypes, Types } from 'mongoose';
 import { Organization } from 'src/organization/schema/organization.schema';
@@ -7,8 +7,14 @@ import { Role } from 'src/role/schema/role.schema';
 
 @Schema({
   timestamps: true,
+  versionKey: false,
 })
 export class Worker {
+  @Prop({
+    unique: true,
+  })
+  workerNo: string;
+
   @Prop({
     unique: true,
   })
@@ -90,6 +96,15 @@ export class Worker {
 
   @Prop()
   signature: string;
+
+  @Prop({ type: [SchemaTypes.ObjectId], ref: Worker.name })
+  workers: Types.ObjectId[];
+
+  @Prop()
+  latitude: number;
+
+  @Prop()
+  longtitude: number;
 }
 
 export type WorkerDocument = Worker & Document;

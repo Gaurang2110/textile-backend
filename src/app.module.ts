@@ -8,6 +8,7 @@ import { PostModule } from './post/post.module';
 import { WorkerModule } from './worker/worker.module';
 import { AwsModule } from './aws/aws.module';
 import { RoleModule } from './role/role.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { RoleModule } from './role/role.module';
     WorkerModule,
     AwsModule,
     RoleModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

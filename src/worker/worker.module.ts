@@ -8,9 +8,12 @@ import { RoleSchema } from 'src/role/schema/role.schema';
 import { PostSchema } from 'src/post/schema/post.schema';
 import { S3Service } from 'src/aws/s3/s3.service';
 import { OrganizationSchema } from 'src/organization/schema/organization.schema';
+import { HttpModule } from '@nestjs/axios';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
+    HttpModule,
     MongooseModule.forFeature([
       {
         name: 'Worker',
@@ -29,6 +32,9 @@ import { OrganizationSchema } from 'src/organization/schema/organization.schema'
         schema: OrganizationSchema,
       },
     ]),
+    MulterModule.register({
+      dest: 'tmp',
+    }),
   ],
   providers: [WorkerService, UtilityFunctions, S3Service],
   controllers: [WorkerController],

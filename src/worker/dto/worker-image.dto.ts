@@ -12,7 +12,7 @@ export enum MediaAction {
   GET_LINK = 'get-link',
 }
 
-export class WorkerImageDTO {
+export class WorkerDierctImageDTO {
   @IsEnum(WorkerImageType)
   @IsDefined()
   type: WorkerImageType;
@@ -31,7 +31,9 @@ export class WorkerImageDTO {
   @IsDefined()
   @IsNotEmpty()
   company: string;
+}
 
+export class WorkerImageDTO extends WorkerDierctImageDTO {
   @IsEnum(MediaAction)
   @IsDefined()
   action: MediaAction;
