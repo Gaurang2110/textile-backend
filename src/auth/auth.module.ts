@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { WorkerSchema } from 'src/worker/schema/worker.schema';
 import { UtilityFunctions } from 'src/utils/functions';
+import { VerificationCodeSchema } from './schema/verification-code.schema';
 
 @Module({
   imports: [
@@ -11,6 +12,10 @@ import { UtilityFunctions } from 'src/utils/functions';
       {
         name: 'Worker',
         schema: WorkerSchema,
+      },
+      {
+        name: 'VerificationCode',
+        schema: VerificationCodeSchema,
       },
     ]),
   ],

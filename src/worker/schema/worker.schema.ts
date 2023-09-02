@@ -97,6 +97,18 @@ export class Worker {
   @Prop()
   signature: string;
 
+  @Prop()
+  dateOfBirth: string;
+
+  @Prop()
+  joiningDate: string;
+
+  @Prop()
+  blockNo: string;
+
+  @Prop({ default: 0 })
+  age: number;
+
   @Prop({ type: [SchemaTypes.ObjectId], ref: Worker.name })
   workers: Types.ObjectId[];
 

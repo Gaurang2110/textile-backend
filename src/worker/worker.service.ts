@@ -1,8 +1,11 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { readFileSync } from 'fs';
+import * as moment from 'moment';
 import { Model } from 'mongoose';
-import { extname } from 'path';
+import { extname, join } from 'path';
+import { create } from 'pdf-creator-node';
 import { S3Service } from 'src/aws/s3/s3.service';
 import {
   Organization,
@@ -12,11 +15,7 @@ import { Post, PostDocument } from 'src/post/schema/post.schema';
 import { Role, RoleDocument } from 'src/role/schema/role.schema';
 import { UtilityFunctions } from 'src/utils/functions';
 import { CreateWorkerDto } from './dto/create-worker.dto';
-import {
-  MediaAction,
-  WorkerDierctImageDTO,
-  WorkerImageDTO,
-} from './dto/worker-image.dto';
+import { MediaAction, WorkerImageDTO } from './dto/worker-image.dto';
 import { Worker, WorkerDocument } from './schema/worker.schema';
 
 @Injectable()
@@ -34,7 +33,7 @@ export class WorkerService {
     private readonly utilityFunctions: UtilityFunctions,
     private readonly httpService: HttpService,
   ) {}
-  async createWorker(worker: CreateWorkerDto) {
+  async createWorker(worker: CreateWorkerDto, isEdit = false) {
     try {
       const defaultPassword = 'Textile@1234';
       const cryptPass = await this.utilityFunctions.cryptPassword(
@@ -45,6 +44,17 @@ export class WorkerService {
           cryptPass?.error?.message || 'Something went wrong.',
           cryptPass?.error?.status || HttpStatus.BAD_REQUEST,
         );
+      }
+      let workerData;
+      if (isEdit) {
+        console.log('worker', worker.workerNo);
+        workerData = await this.WorkerModel.findOne({
+          workerNo: worker.workerNo,
+        });
+
+        if (!workerData?._id) {
+          throw new HttpException('Worker not found', HttpStatus.BAD_REQUEST);
+        }
       }
       const postExists = await this.PostModel.exists({ _id: worker.post });
 
@@ -62,13 +72,54 @@ export class WorkerService {
       if (!orgExists) {
         throw new HttpException('Company not found', HttpStatus.BAD_REQUEST);
       }
-      const workerObj = await this.WorkerModel.create({
-        ...worker,
-        password: cryptPass.hashPassword,
-      });
-      await workerObj.save();
+
+      if (worker.joiningDate) {
+        if (!moment(worker.joiningDate).isValid()) {
+          throw new HttpException(
+            'Invalid Joining Date',
+            HttpStatus.BAD_REQUEST,
+          );
+        } else {
+          worker.joiningDate = moment(worker.joiningDate).format('DD MMM YYYY');
+        }
+      }
+
+      if (worker.dateOfBirth) {
+        if (!moment(worker.dateOfBirth).isValid()) {
+          throw new HttpException(
+            'Invalid Joining Date',
+            HttpStatus.BAD_REQUEST,
+          );
+        } else {
+          worker.dateOfBirth = moment(worker.dateOfBirth).format('DD MMM YYYY');
+        }
+      }
+
+      let wokerUpdated;
+      if (isEdit) {
+        const data = workerData.toJSON();
+        wokerUpdated = await this.WorkerModel.findOneAndUpdate(
+          {
+            workerNo: worker.workerNo,
+          },
+          {
+            $set: {
+              ...data,
+              ...worker,
+              emailAddress: data.emailAddress,
+            },
+          },
+        );
+      } else {
+        wokerUpdated = await this.WorkerModel.create({
+          ...worker,
+          password: cryptPass.hashPassword,
+        });
+        await wokerUpdated.save();
+      }
+
       const workerResp = (
-        await this.WorkerModel.findById(workerObj._id).populate([
+        await this.WorkerModel.findById(wokerUpdated._id).populate([
           { path: 'post', select: 'name' },
           { path: 'role', select: 'name' },
           { path: 'company', select: 'name' },
@@ -142,6 +193,46 @@ export class WorkerService {
         return { url };
       }
       return { url: '' };
+    } catch (err) {
+      throw new HttpException(
+        err?.message || 'Something went wrong.',
+        err?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async createWorkerPDF() {
+    try {
+      const options = {
+        format: 'A3',
+        orientation: 'portrait',
+        border: '10mm',
+      };
+      console.log(join(__dirname, '../templates/worker-pdf.html'));
+      const html = readFileSync(
+        join(__dirname, '../templates/worker-pdf.html'),
+        'utf8',
+      );
+
+      const document = {
+        html: html,
+        data: {
+          workerNo: 'Hello1234',
+          machineNo: 'machine123455',
+          alterNo: '12345rdsa',
+        },
+        path: '',
+        type: 'buffer',
+      };
+
+      create(document, options)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      return true;
     } catch (err) {
       throw new HttpException(
         err?.message || 'Something went wrong.',

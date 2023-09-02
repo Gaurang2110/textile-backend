@@ -5,25 +5,24 @@ import {
   IsEmail,
   IsMongoId,
   IsNotEmpty,
-  IsNotEmptyObject,
   IsObject,
+  IsOptional,
   IsString,
-  Length,
   ValidateNested,
 } from 'class-validator';
 import { ObjectId } from 'mongoose';
 
 export class BankDetailDTO {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   bankAccountName: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   ifscCode: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   bankAccountNumber: string;
 }
 
@@ -49,18 +48,15 @@ export class CreateWorkerDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   reference: string;
 
   @IsString()
-  @IsNotEmpty()
-  @Length(12, 12)
+  @IsOptional()
   aadharNo: string;
 
   @IsString()
-  @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   mobileNo: string;
 
   @IsString()
@@ -68,16 +64,14 @@ export class CreateWorkerDto {
   @IsEmail()
   emailAddress: string;
 
-  @IsDefined()
-  @IsNotEmptyObject()
+  @IsOptional()
   @IsObject()
   @ValidateNested()
   @Type(() => BankDetailDTO)
   bankDetails: BankDetailDTO;
 
   @IsString()
-  @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   status: string;
 
   @IsString()
@@ -96,26 +90,39 @@ export class CreateWorkerDto {
   company: string;
 
   @IsString()
-  @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   aadharCard: string;
 
   @IsString()
-  @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   profile: string;
 
   @IsString()
-  @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   bankPassbook: string;
 
   @IsString()
-  @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   signature: string;
 
+  @IsString()
+  @IsOptional()
+  joiningDate: string;
+
+  @IsString()
+  @IsOptional()
+  dateOfBirth: string;
+
+  @IsString()
+  @IsOptional()
+  blockNo: string;
+
+  @IsString()
+  @IsOptional()
+  age: number;
+
   @IsArray()
+  @IsOptional()
   @IsMongoId({ each: true })
   workers: ObjectId[];
 }

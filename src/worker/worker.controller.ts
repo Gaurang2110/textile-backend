@@ -1,14 +1,6 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CreateWorkerDto } from './dto/create-worker.dto';
-import { WorkerDierctImageDTO, WorkerImageDTO } from './dto/worker-image.dto';
+import { WorkerImageDTO } from './dto/worker-image.dto';
 import { WorkerService } from './worker.service';
 
 // 010720200001
@@ -20,9 +12,15 @@ export class WorkerController {
   constructor(private readonly workerService: WorkerService) {}
 
   @Post()
-  async createPost(@Body() worker: CreateWorkerDto) {
+  async createWorker(@Body() worker: CreateWorkerDto) {
     const resp = await this.workerService.createWorker(worker);
     return { message: 'Worker Created Successfully.', data: resp };
+  }
+
+  @Post('update')
+  async updateWorker(@Body() worker: CreateWorkerDto) {
+    const resp = await this.workerService.createWorker(worker, true);
+    return { message: 'Worker updated Successfully.', data: resp };
   }
 
   @Get()
@@ -40,6 +38,12 @@ export class WorkerController {
   @Post('upload')
   async uploadWorkerImages(@Body() imageDto: WorkerImageDTO) {
     const resp = await this.workerService.uploadImages(imageDto);
+    return { message: 'Action completed Successfully.', data: resp };
+  }
+
+  @Post('pdf')
+  async getWorkerPDF() {
+    const resp = await this.workerService.createWorkerPDF();
     return { message: 'Action completed Successfully.', data: resp };
   }
 }

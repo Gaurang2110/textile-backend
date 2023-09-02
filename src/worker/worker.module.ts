@@ -1,15 +1,14 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { S3Service } from 'src/aws/s3/s3.service';
+import { OrganizationSchema } from 'src/organization/schema/organization.schema';
+import { PostSchema } from 'src/post/schema/post.schema';
+import { RoleSchema } from 'src/role/schema/role.schema';
+import { UtilityFunctions } from 'src/utils/functions';
 import { WorkerSchema } from './schema/worker.schema';
 import { WorkerController } from './worker.controller';
 import { WorkerService } from './worker.service';
-import { UtilityFunctions } from 'src/utils/functions';
-import { RoleSchema } from 'src/role/schema/role.schema';
-import { PostSchema } from 'src/post/schema/post.schema';
-import { S3Service } from 'src/aws/s3/s3.service';
-import { OrganizationSchema } from 'src/organization/schema/organization.schema';
-import { HttpModule } from '@nestjs/axios';
-import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
