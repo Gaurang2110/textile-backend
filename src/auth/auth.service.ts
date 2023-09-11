@@ -21,6 +21,7 @@ import {
 } from './schema/verification-code.schema';
 import { VerificationCodeType } from './enum/verification-code-type.enum';
 import { VerificationCodeStatus } from './enum/verification-code-status.enum';
+import { EmailService } from 'src/email/email.service';
 
 interface IMongoModel {
   _id: string;
@@ -41,6 +42,7 @@ export class AuthService {
 
     private readonly utilityFunctions: UtilityFunctions,
     private readonly configService: ConfigService,
+    private readonly emailService: EmailService,
   ) {}
 
   throwError(err) {
@@ -111,7 +113,7 @@ export class AuthService {
         .findOne({
           emailAddress: dto.email,
         })
-        .select(['emailAddress']);
+        .select(['emailAddress', 'name']);
       if (!worker?._id) {
         throw new BadRequestException('Email address not registered.');
       }
@@ -123,8 +125,16 @@ export class AuthService {
         expiryAt: Date.now() + 1000 * 60 * 10,
         type: VerificationCodeType.FORGOT_PASSWORD,
       });
+      // await this.emailService.sendForgotPasswordCode({
+      //   toEmail: `"${worker.name}" <${worker.emailAddress}>`,
+      //   values: {
+      //     fullName: `${worker.name}`,
+      //     confirmationCode: verificationCode.code,
+      //   },
+      // });
       return {
         id: verificationCode._id,
+        code: verificationCode.code,
       };
     } catch (err) {
       this.throwError(err);

@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { WorkerSchema } from 'src/worker/schema/worker.schema';
 import { UtilityFunctions } from 'src/utils/functions';
 import { VerificationCodeSchema } from './schema/verification-code.schema';
+import { EmailService } from 'src/email/email.service';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { VerificationCodeSchema } from './schema/verification-code.schema';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UtilityFunctions],
+  providers: [AuthService, UtilityFunctions, EmailService],
 })
 export class AuthModule {}

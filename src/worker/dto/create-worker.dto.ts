@@ -34,12 +34,12 @@ export class CreateWorkerDto {
 
   @IsString()
   @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   alterNo: string;
 
   @IsString()
   @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   machineNo: string;
 
   @IsString()
@@ -104,6 +104,10 @@ export class CreateWorkerDto {
   @IsString()
   @IsOptional()
   signature: string;
+
+  @IsString()
+  @IsOptional()
+  aadharCardBack: string;
 
   @IsString()
   @IsOptional()

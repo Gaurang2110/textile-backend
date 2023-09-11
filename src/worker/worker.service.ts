@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { readFileSync } from 'fs';
@@ -31,7 +30,6 @@ export class WorkerService {
     private readonly OrgModel: Model<OrganizationDocument>,
     private readonly s3Service: S3Service,
     private readonly utilityFunctions: UtilityFunctions,
-    private readonly httpService: HttpService,
   ) {}
   async createWorker(worker: CreateWorkerDto, isEdit = false) {
     try {
@@ -174,7 +172,7 @@ export class WorkerService {
   async uploadImages(dto: WorkerImageDTO) {
     try {
       const extension = extname(dto.fileName).toLowerCase() || '.png';
-      const key = `org/${dto.company}/${dto.alterNo}/${dto.type}${extension}`;
+      const key = `org/${dto.company}/${dto.workerNo}/${dto.type}${extension}`;
       const acl = 'public-read';
       const bucket = 'textile-user-images';
 
@@ -201,14 +199,45 @@ export class WorkerService {
     }
   }
 
-  async createWorkerPDF() {
+  async createPDFFile(document, options, workerDetails) {
+    return new Promise((resolve, reject) => {
+      create(document, options)
+        .then(async (res: Buffer) => {
+          const key = `org/${workerDetails.company._id}/${workerDetails.alterNo}/${workerDetails._id}_worker.pdf`;
+          const bucket = 'textile-user-images';
+          const { Location }: Record<string, any> = await this.s3Service.upload(
+            res,
+            bucket,
+            key,
+            'public-read',
+          );
+          resolve({ url: Location });
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+    });
+  }
+
+  async createWorkerPDF(id: string) {
     try {
+      const workerDetails = (
+        await this.WorkerModel.findById(id).populate([
+          { path: 'post', select: 'name' },
+          { path: 'role', select: 'name' },
+          { path: 'company', select: 'name' },
+        ])
+      ).toJSON();
+      if (!workerDetails?._id) {
+        throw new HttpException('Worker not found', HttpStatus.BAD_REQUEST);
+      }
+
       const options = {
         format: 'A3',
         orientation: 'portrait',
         border: '10mm',
       };
-      console.log(join(__dirname, '../templates/worker-pdf.html'));
       const html = readFileSync(
         join(__dirname, '../templates/worker-pdf.html'),
         'utf8',
@@ -217,22 +246,30 @@ export class WorkerService {
       const document = {
         html: html,
         data: {
-          workerNo: 'Hello1234',
-          machineNo: 'machine123455',
-          alterNo: '12345rdsa',
+          workerNo: workerDetails?.workerNo ?? 'N/A',
+          machineNo: workerDetails?.machineNo ?? 'N/A',
+          alterNo: workerDetails?.alterNo ?? 'N/A',
+          joiningDate: workerDetails?.joiningDate ?? 'N/A',
+          name: workerDetails?.name ?? 'N/A',
+          reference: workerDetails?.reference ?? 'N/A',
+          mobileNo: workerDetails?.mobileNo ?? 'N/A',
+          aadharNo: workerDetails?.aadharNo ?? 'N/A',
+          emailAddress: workerDetails?.emailAddress ?? 'N/A',
+          role: workerDetails?.role?.['name'] ?? 'N/A',
+          post: workerDetails?.post?.['name'] ?? 'N/A',
+          company: workerDetails?.company?.['name'] ?? 'N/A',
+          ifscCode: workerDetails?.bankDetails?.ifscCode ?? 'N/A',
+          bankAccountName: workerDetails?.bankDetails?.bankAccountName ?? 'N/A',
+          status: workerDetails?.status ?? 'N/A',
+          profile:
+            workerDetails?.profile ??
+            'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg',
         },
         path: '',
         type: 'buffer',
       };
 
-      create(document, options)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      return true;
+      return await this.createPDFFile(document, options, workerDetails);
     } catch (err) {
       throw new HttpException(
         err?.message || 'Something went wrong.',

@@ -54,7 +54,7 @@ export class Worker {
   })
   bankDetails: {
     bankAccountName: string;
-    IfscCode: string;
+    ifscCode: string;
     bankAccountNumber: string;
   };
 
@@ -87,6 +87,9 @@ export class Worker {
 
   @Prop()
   aadharCard: string;
+
+  @Prop()
+  aadharCardBack: string;
 
   @Prop()
   profile: string;

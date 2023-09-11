@@ -4,6 +4,7 @@ export enum WorkerImageType {
   PROFILE = 'profile',
   BANK_PASSBOOK = 'bank-passbook',
   AADHAR_CARD = 'aadhar-card',
+  AADHAR_CARD_BACK = 'aadhar-card-back',
   SIGNATURE = 'signature',
 }
 
@@ -20,7 +21,7 @@ export class WorkerDierctImageDTO {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
-  alterNo: string;
+  workerNo: string;
 
   @IsString()
   @IsDefined()

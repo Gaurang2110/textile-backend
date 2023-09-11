@@ -36,29 +36,29 @@ export class S3Service {
   }
 
   public async uploadS3(
-    file: Express.Multer.File,
+    buffer: Buffer,
     bucket: string,
     key: string,
-    acl: string,
+    acl = 'public-read',
+    contentType = 'application/pdf',
   ) {
-    const s3 = this.getS3();
-    console.log(__dirname, '..', '..', '..', file.destination, file.filename);
-    console.log(
-      join(__dirname, '..', '..', '..', file.destination, file.filename),
-    );
-    const buffer = await readFile(
-      join(__dirname, '..', '..', '..', file.destination, file.filename),
-    );
-    const res = await s3
-      .upload({
-        Bucket: bucket,
-        Key: key,
-        Body: buffer,
-        ACL: acl,
-      })
-      .promise();
-    // this.unlinkFile(file);
-    return res;
+    try {
+      const s3 = this.getS3();
+      const res = await s3
+        .upload({
+          Bucket: bucket,
+          Key: key,
+          Body: buffer,
+          ACL: acl,
+          ContentType: contentType,
+        })
+        .promise();
+      // this.unlinkFile(file);
+      return res;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   private async unlinkFile(file: Express.Multer.File) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param } from '@nestjs/common';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { WorkerImageDTO } from './dto/worker-image.dto';
 import { WorkerService } from './worker.service';
@@ -41,9 +41,9 @@ export class WorkerController {
     return { message: 'Action completed Successfully.', data: resp };
   }
 
-  @Post('pdf')
-  async getWorkerPDF() {
-    const resp = await this.workerService.createWorkerPDF();
+  @Post('pdf/:id')
+  async getWorkerPDF(@Param('id') id: string) {
+    const resp = await this.workerService.createWorkerPDF(id);
     return { message: 'Action completed Successfully.', data: resp };
   }
 }
