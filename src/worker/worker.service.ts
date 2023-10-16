@@ -112,6 +112,7 @@ export class WorkerService {
         wokerUpdated = await this.WorkerModel.create({
           ...worker,
           password: cryptPass.hashPassword,
+          mpassword:defaultPassword
         });
         await wokerUpdated.save();
       }
@@ -203,7 +204,7 @@ export class WorkerService {
     return new Promise((resolve, reject) => {
       create(document, options)
         .then(async (res: Buffer) => {
-          const key = `org/${workerDetails.company._id}/${workerDetails.alterNo}/${workerDetails._id}_worker.pdf`;
+          const key = `org/${workerDetails.company._id}/${workerDetails.aadharNo}/${workerDetails._id}_worker.pdf`;
           const bucket = 'textile-user-images';
           const { Location }: Record<string, any> = await this.s3Service.upload(
             res,
@@ -260,9 +261,19 @@ export class WorkerService {
           company: workerDetails?.company?.['name'] ?? 'N/A',
           ifscCode: workerDetails?.bankDetails?.ifscCode ?? 'N/A',
           bankAccountName: workerDetails?.bankDetails?.bankAccountName ?? 'N/A',
+          bankAccountNumber: workerDetails?.bankDetails?.bankAccountNumber ?? 'N/A',
           status: workerDetails?.status ?? 'N/A',
           profile:
             workerDetails?.profile ??
+            'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg',
+          aadharCard:
+            workerDetails?.aadharCard ??
+            'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg',
+          aadharCardBack:
+            workerDetails?.aadharCardBack ??
+            'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg',
+          bankPassbook:
+            workerDetails?.bankPassbook ??
             'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg',
         },
         path: '',
@@ -304,4 +315,51 @@ export class WorkerService {
   //     );
   //   }
   // }
+
+  async deleteWorker (id:any) {
+    try {
+      const worker = await this.WorkerModel.findOneAndDelete({_id : id})
+      return worker
+    } catch (err) {
+      throw new HttpException(
+        err?.message || 'Something went wrong.',
+        err?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async updateWorker (worker:any) {
+    try {
+      let workerData;
+        workerData = await this.WorkerModel.findOne({
+          workerNo: worker.workerNo,
+        });
+
+        if (!workerData?._id) {
+          throw new HttpException('Worker not found', HttpStatus.BAD_REQUEST);
+        }
+        let wokerUpdated;
+
+        wokerUpdated = await this.WorkerModel.findOneAndUpdate(
+          {
+            workerNo: worker.workerNo,
+          },
+          {
+            $set: {
+              ...worker,
+            },
+          },
+          );
+          workerData = await this.WorkerModel.findOne({
+            workerNo: worker.workerNo,
+          });
+          return workerData
+    } catch (err) {
+      throw new HttpException(
+        err?.message || 'Something went wrong.',
+        err?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+    
 }

@@ -7,12 +7,16 @@ export class ForgotPasswordDTO {
 }
 
 export class UpdatePasswordDTO extends ForgotPasswordDTO {
+
+  @IsString()
+  password: string;
+}
+
+export class VerifyCodeDTO extends ForgotPasswordDTO {
   @IsMongoId()
   id: string;
 
   @IsString()
   code: string;
 
-  @IsString()
-  password: string;
 }

@@ -33,6 +33,8 @@ import { EmailModule } from './email/email.module';
             return connection;
           },
           uri: configService.get('MONGO_URI', ''),
+          useNewUrlParser: true,
+          useUnifiedTopology: true
         };
       },
       inject: [ConfigService],

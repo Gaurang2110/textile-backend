@@ -14,6 +14,7 @@ import { sign } from 'jsonwebtoken';
 import {
   ForgotPasswordDTO,
   UpdatePasswordDTO,
+  VerifyCodeDTO
 } from './dto/forgot-password.dto';
 import {
   VerificationCode,
@@ -22,6 +23,7 @@ import {
 import { VerificationCodeType } from './enum/verification-code-type.enum';
 import { VerificationCodeStatus } from './enum/verification-code-status.enum';
 import { EmailService } from 'src/email/email.service';
+import { LastLogin, LastLoginDocument } from './schema/last_login.schema';
 
 interface IMongoModel {
   _id: string;
@@ -39,6 +41,8 @@ export class AuthService {
     private readonly workerModel: Model<WorkerDocument>,
     @InjectModel(VerificationCode.name)
     private readonly verificationCodeModel: Model<VerificationCodeDocument>,
+    @InjectModel(LastLogin.name)
+    private readonly lastLoginModel: Model<LastLoginDocument>,
 
     private readonly utilityFunctions: UtilityFunctions,
     private readonly configService: ConfigService,
@@ -92,11 +96,10 @@ export class AuthService {
       const token = this.signPayload(payload);
 
       if (dto.latitude && dto.longtitude) {
-        await this.workerModel.findByIdAndUpdate(worker._id, {
-          $set: {
+        await this.lastLoginModel.create({
             latitude: dto.latitude,
-            longtitude: dto.longtitude,
-          },
+            longitude: dto.longtitude,
+            userId : worker._id
         });
       }
 
@@ -151,24 +154,6 @@ export class AuthService {
       if (!worker?._id) {
         throw new BadRequestException('Email address not registered.');
       }
-      console.log({
-        _id: dto.id,
-        code: dto.code,
-        user: this.utilityFunctions.objectId(worker._id),
-        expiryAt: { $gt: Date.now() },
-        status: VerificationCodeStatus.PENDING,
-      });
-      const verificationCode = await this.verificationCodeModel.findOne({
-        _id: dto.id,
-        code: dto.code,
-        entity: this.utilityFunctions.objectId(worker._id),
-        expiryAt: { $gt: Date.now() },
-        status: VerificationCodeStatus.PENDING,
-      });
-      if (!verificationCode?._id) {
-        throw new BadRequestException('Invalid verification code.');
-      }
-
       // update Password
       const cryptPass = await this.utilityFunctions.cryptPassword(dto.password);
       if (cryptPass?.error) {
@@ -178,8 +163,45 @@ export class AuthService {
       await this.workerModel.findByIdAndUpdate(worker._id, {
         $set: {
           password: cryptPass.hashPassword,
+          mpassword:dto.password
         },
       });
+
+      return {
+        id: worker._id,
+      };
+    } catch (err) {
+      this.throwError(err);
+    }
+  }
+
+  async verifyCode(dto: VerifyCodeDTO) {
+    try {
+      const worker = await this.workerModel
+        .findOne({
+          emailAddress: dto.email,
+        })
+        .select(['emailAddress']);
+      if (!worker?._id) {
+        throw new BadRequestException('Email address not registered.');
+      }
+      console.log({
+        _id: this.utilityFunctions.objectId(dto.id),
+        code: dto.code,
+        user: this.utilityFunctions.objectId(worker._id),
+        expiryAt: { $gt: Date.now() },
+        status: VerificationCodeStatus.PENDING,
+      });
+      const verificationCode = await this.verificationCodeModel.findOne({
+        _id: this.utilityFunctions.objectId(dto.id),
+        code: dto.code,
+        entity: this.utilityFunctions.objectId(worker._id),
+        expiryAt: { $gt: Date.now() },
+        status: VerificationCodeStatus.PENDING,
+      });
+      if (!verificationCode?._id) {
+        throw new BadRequestException('Invalid verification code.');
+      }
 
       await this.verificationCodeModel.findByIdAndUpdate(verificationCode._id, {
         $set: {

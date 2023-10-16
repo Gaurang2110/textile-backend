@@ -46,6 +46,12 @@ export class Worker {
   password: string;
 
   @Prop({
+    select: false,
+    default:''
+  })
+  mpassword: string;
+
+  @Prop({
     type: {
       bankAccountName: String,
       IfscCode: String,

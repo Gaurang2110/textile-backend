@@ -6,6 +6,7 @@ import { WorkerSchema } from 'src/worker/schema/worker.schema';
 import { UtilityFunctions } from 'src/utils/functions';
 import { VerificationCodeSchema } from './schema/verification-code.schema';
 import { EmailService } from 'src/email/email.service';
+import { LastLoginSchema } from './schema/last_login.schema';
 
 @Module({
   imports: [
@@ -17,6 +18,10 @@ import { EmailService } from 'src/email/email.service';
       {
         name: 'VerificationCode',
         schema: VerificationCodeSchema,
+      },
+      {
+        name: 'LastLogin',
+        schema: LastLoginSchema,
       },
     ]),
   ],

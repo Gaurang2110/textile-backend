@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import {
   ForgotPasswordDTO,
   UpdatePasswordDTO,
+  VerifyCodeDTO,
 } from './dto/forgot-password.dto';
 
 @Controller({
@@ -29,5 +30,11 @@ export class AuthController {
   async updatePassword(@Body() dto: UpdatePasswordDTO): Promise<IResponse> {
     const resp = await this.authService.updatePassword(dto);
     return { message: 'Password updated successfully.', data: resp };
+  }
+
+  @Post('verify-code')
+  async verifyCode(@Body() dto: VerifyCodeDTO): Promise<IResponse> {
+    const resp = await this.authService.verifyCode(dto);
+    return { message: 'Verified successfully.', data: resp };
   }
 }

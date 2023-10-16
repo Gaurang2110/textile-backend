@@ -57,7 +57,7 @@
             /* align-self: flex-end;
   align-items: flex-end; */
             align-items: flex-end;
-            padding: 20px;
+            /* padding: 20px; */
             border: 2px solid #000;
             height: 60px;
         }
@@ -66,6 +66,10 @@
         .maher-creation p {
             margin: 0;
             /* height: 50px; */
+        }
+        .profile {
+            height: 100px;
+            width: 150px;
         }
     </style>
 </head>
@@ -89,12 +93,13 @@
                     <td colspan="1" class="centerText">S NO</td>
                     <td colspan="1" class="centerText">MACHINE NO</td>
                     <td colspan="1" class="centerText">ALT NO</td>
-                    <td colspan="1" rowspan="5" class="profile"><img src="{{profile}}" alt=""></td>
+                    <td colspan="1"></td>
                 </tr>
                 <tr>
                     <td colspan="1">{{workerNo}}</td>
                     <td colspan="1">{{machineNo}}</td>
                     <td colspan="1">{{alterNo}}</td>
+                    <td colspan="1" ><img class="profile" src="{{profile}}" alt=""></td>
                 </tr>
                 <tr>
                     <td colspan="1">DATE OF JOINING</td>
@@ -118,56 +123,70 @@
                 </tr>
                 <tr>
                     <td colspan="1">ADDRESS</td>
-                    <td colspan="4">-</td>
+                    <td colspan="3">-</td>
                 </tr>
                 <tr>
-                    <td colspan="1">email id</td>
-                    <td colspan="4">{{emailAddress}}</td>
-                    <!-- <td colspan="2" rowspan="5" class="img-td"><img src="./image/Aadhar.png" alt=""></td> -->
+                    <td colspan="1">EMAIL</td>
+                    <td colspan="3">{{emailAddress}}</td>
+                    <!-- <td colspan="2" rowspan="5" class="img-td"><img src="{{aadharCard}}" alt=""></td> -->
                 </tr>
                 <tr>
-                    <td colspan="1">role</td>
-                    <td colspan="4">{{role}}</td>
+                    <td colspan="1">ROLE</td>
+                    <td colspan="3">{{role}}</td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td colspan="1">password</td>
-                    <td colspan="4">******</td>
+                    <td colspan="3">******</td>
+                </tr> -->
+                <tr>
+                    <td colspan="1">POST</td>
+                    <td colspan="3">{{post}}</td>
                 </tr>
                 <tr>
-                    <td colspan="1">post</td>
-                    <td colspan="4">{{post}}</td>
+                    <td colspan="1">COMPANY NAME</td>
+                    <td colspan="3">{{company}}</td>
                 </tr>
                 <tr>
-                    <td colspan="1">compney name</td>
-                    <td colspan="4">{{company}}</td>
+                    <td colspan="1">BANK NAME</td>
+                    <td colspan="3">The Varacha co operative bank limited</td>
+                    <!-- <td colspan="2" rowspan="5" class="img-td"><img src="{{aadharCardBack}}" alt=""></td> -->
                 </tr>
                 <tr>
-                    <td colspan="1">bank name</td>
-                    <td colspan="4">The Varacha co operative bank limited</td>
-                    <!-- <td colspan="2" rowspan="5" class="img-td"><img src="./image/Aadhar.png" alt=""></td> -->
+                    <td colspan="1">IFSC CODE</td>
+                    <td colspan="3">{{ifscCode}}</td>
                 </tr>
                 <tr>
-                    <td colspan="1">ifsc code</td>
-                    <td colspan="4">{{ifscCode}}</td>
+                    <td colspan="1">BANK ACC NO.</td>
+                    <td colspan="3">{{bankAccountNumber}}</td>
                 </tr>
                 <tr>
-                    <td colspan="1">bank acc no</td>
-                    <td colspan="4">{{bankAccountName}}</td>
+                    <td colspan="1">STATUS</td>
+                    <td colspan="3">{{status}}</td>
                 </tr>
                 <tr>
-                    <td colspan="1">status</td>
-                    <td colspan="4">{{status}}</td>
+                    <td colspan="2" class="centerText">AADHAR FRONT</td>
+                    <td colspan="2" class="centerText">AADHAR BACK</td>
                 </tr>
+                <tr>
+                    <td colspan="2" ><img class="profile" src="{{aadharCard}}" alt="" ></td>
+                    <td colspan="2" ><img class="profile" src="{{aadharCardBack}}" alt="" ></td>
+                </tr>
+                <!-- <tr>
+                    <td colspan="3" class="centerText">BANK PASSBOOK</td>
+                </tr>
+                <tr>
+                    <td colspan="3" ><img class="profile" src="{{bankPassbook}}" alt=""></td>
+                </tr> -->
             </tbody>
         </table>
         <div class="footer">
 
             <div class="signature">
                 <p>Signature</p>
-            </div>
-            <div class="maher-creation">
                 <p>For Maher Creation</p>
             </div>
+            <!-- <div class="maher-creation">
+            </div> -->
         </div>
     </div>
 </body>

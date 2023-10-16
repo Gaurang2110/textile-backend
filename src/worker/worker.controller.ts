@@ -46,4 +46,15 @@ export class WorkerController {
     const resp = await this.workerService.createWorkerPDF(id);
     return { message: 'Action completed Successfully.', data: resp };
   }
+  @Post('delete/:id')
+  async deleteWorker(@Param('id') id: string) {
+    const resp = await this.workerService.deleteWorker(id);
+    return { message: 'Action completed Successfully.', data: resp };
+  }
+
+  @Post('updateWorker')
+  async updateWorker2(@Body() worker: any) {
+    const resp = await this.workerService.updateWorker(worker);
+    return { message: 'Worker updated Successfully.', data: resp };
+  }
 }
