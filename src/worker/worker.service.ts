@@ -71,27 +71,27 @@ export class WorkerService {
         throw new HttpException('Company not found', HttpStatus.BAD_REQUEST);
       }
 
-      if (worker.joiningDate) {
-        if (!moment(worker.joiningDate).isValid()) {
-          throw new HttpException(
-            'Invalid Joining Date',
-            HttpStatus.BAD_REQUEST,
-          );
-        } else {
-          worker.joiningDate = moment(worker.joiningDate).format('DD MMM YYYY');
-        }
-      }
+      // if (worker.joiningDate) {
+      //   if (!moment(worker.joiningDate).isValid()) {
+      //     throw new HttpException(
+      //       'Invalid Joining Date',
+      //       HttpStatus.BAD_REQUEST,
+      //     );
+      //   } else {
+      //     worker.joiningDate = moment(worker.joiningDate).format('DD MMM YYYY');
+      //   }
+      // }
 
-      if (worker.dateOfBirth) {
-        if (!moment(worker.dateOfBirth).isValid()) {
-          throw new HttpException(
-            'Invalid Joining Date',
-            HttpStatus.BAD_REQUEST,
-          );
-        } else {
-          worker.dateOfBirth = moment(worker.dateOfBirth).format('DD MMM YYYY');
-        }
-      }
+      // if (worker.dateOfBirth) {
+      //   if (!moment(worker.dateOfBirth).isValid()) {
+      //     throw new HttpException(
+      //       'Invalid Joining Date',
+      //       HttpStatus.BAD_REQUEST,
+      //     );
+      //   } else {
+      //     worker.dateOfBirth = moment(worker.dateOfBirth).format('DD MMM YYYY');
+      //   }
+      // }
 
       let wokerUpdated;
       if (isEdit) {

@@ -39,9 +39,11 @@
         td {
             border: 2px solid #000;
             padding: 6px;
-            font-weight: bold;
+            font-weight: bolder;
             font-size: 19px;
             text-transform: uppercase;
+            font-style: normal;   
+            
         }
 
         .table img {
@@ -69,7 +71,7 @@
         }
         .profile {
             height: 100px;
-            width: 150px;
+            width: 250px;
         }
     </style>
 </head>
@@ -99,7 +101,7 @@
                     <td colspan="1">{{workerNo}}</td>
                     <td colspan="1">{{machineNo}}</td>
                     <td colspan="1">{{alterNo}}</td>
-                    <td colspan="1" ><img class="profile" src="{{profile}}" alt=""></td>
+                    <td colspan="1" ><img class="profile" style="width: 200px;height: 250px; object-fit: contain;" src="{{profile}}" alt=""></td>
                 </tr>
                 <tr>
                     <td colspan="1">DATE OF JOINING</td>
@@ -120,10 +122,6 @@
                 <tr>
                     <td colspan="1">ADHAR NO</td>
                     <td colspan="3">{{aadharNo}}</td>
-                </tr>
-                <tr>
-                    <td colspan="1">ADDRESS</td>
-                    <td colspan="3">-</td>
                 </tr>
                 <tr>
                     <td colspan="1">EMAIL</td>
@@ -152,6 +150,7 @@
                     <!-- <td colspan="2" rowspan="5" class="img-td"><img src="{{aadharCardBack}}" alt=""></td> -->
                 </tr>
                 <tr>
+                <tr>
                     <td colspan="1">IFSC CODE</td>
                     <td colspan="3">{{ifscCode}}</td>
                 </tr>
@@ -163,13 +162,14 @@
                     <td colspan="1">STATUS</td>
                     <td colspan="3">{{status}}</td>
                 </tr>
+           
                 <tr>
                     <td colspan="2" class="centerText">AADHAR FRONT</td>
                     <td colspan="2" class="centerText">AADHAR BACK</td>
                 </tr>
                 <tr>
-                    <td colspan="2" ><img class="profile" src="{{aadharCard}}" alt="" ></td>
-                    <td colspan="2" ><img class="profile" src="{{aadharCardBack}}" alt="" ></td>
+                    <td colspan="2" ><img class="profile" style="width: 500px;height: 250px;  object-fit: contain;" src="{{aadharCard}}" alt="" ></td>
+                    <td colspan="2" ><img class="profile"  style="width: 500px;height: 250px; object-fit: contain;" src="{{aadharCardBack}}" alt="" ></td>
                 </tr>
                 <!-- <tr>
                     <td colspan="3" class="centerText">BANK PASSBOOK</td>

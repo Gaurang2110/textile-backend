@@ -54,7 +54,7 @@ export class Worker {
   @Prop({
     type: {
       bankAccountName: String,
-      IfscCode: String,
+      ifscCode: String,
       bankAccountNumber: String,
     },
   })
